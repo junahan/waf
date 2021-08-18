@@ -167,11 +167,24 @@ end
 function post_attack_check()
     if config_post_check == "on" then
         local POST_RULES = get_rule('post.rule')
-        for _,rule in pairs(ARGS_RULES) do
+        for _,rule in pairs(POST_RULES) do
             local POST_ARGS = ngx.req.get_post_args()
+            --log_record('POST check:',ngx.var.request_uri,POST_ARGS,rule)
+            for key, val in pairs(POST_ARGS) do
+                if type(val) == 'table' then
+                    ARGS_DATA = table.concat(val, " ")
+                else
+                    ARGS_DATA = val
+                end
+                if ARGS_DATA and type(ARGS_DATA) ~= "boolean" and rule ~="" and rulematch(unescape(ARGS_DATA),rule,"jo") then
+                    log_record('Deny_POST_Args',ngx.var.request_uri,"-",rule)
+                    if config_waf_enable == "on" then
+                        waf_output()
+                        return true
+                    end
+                end
+            end
         end
-        return true
     end
     return false
 end
-
