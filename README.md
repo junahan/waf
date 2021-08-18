@@ -2,6 +2,7 @@
 
 - Fork 自 [unixhot/waf](https://github.com/unixhot/waf) 项目，添加了一些常用的 sql injection 保护规则
 - 一部分保护采用 nginx script 更加合适，如 token injection 攻击保护，详见 ```nginx-example.conf```
+- 修复脚本 post.rule 处理问题
 - 使用 Nginx+Lua 实现自定义 WAF（Web application firewall）
 
 ## 项目背景介绍
